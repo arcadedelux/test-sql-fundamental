@@ -1,0 +1,97 @@
+1.select * from mst_cif a join mst_cifpersnl b on (a.cifid=b.cifid) where status = 2;
+
+2.select cifid,dtjoin from mst_cif where dtjoin between '2016/08/04' and '2016/08/24';
+
+3.select a.aoid,count(a.cifid) as joinedcif from mst_cif a
+left join mst_cifpersnl b on a.cifid = b.cifid group by a.aoid
+hasilnya  menampilkan value aoid dan jumlah cifid dari tabel mst_cif dengan nama colom joinedcif di grup kan bedasarkan colum aoid dari tabel mst_cif 
+
+4.select cifid,aoid,status from mst_cif where cifid in('0001277352',0001277638);
+
+
+5.CREATE TABLE public.mst_cif
+(
+  cifid character varying(10) NOT NULL,
+  aoid character varying(10) NOT NULL,
+  dtjoin date NOT NULL,
+  fullnm character varying(60) NOT NULL,
+  npwp character varying(20),
+  ciftype smallint NOT NULL,
+  countryid character(2) NOT NULL,
+  flgrelated smallint NOT NULL,
+  status character(1),
+  flgapprv smallint,
+  usrcrt character varying(5) NOT NULL,
+  dtcrt timestamp without time zone NOT NULL,
+  usrupd character varying(5),
+  dtupd timestamp without time zone,
+  usrapv character varying(5),
+  dtapprv timestamp without time zone,
+  CONSTRAINT mst_cif_pkey PRIMARY KEY (cifid),
+  CONSTRAINT fk_mst_cif FOREIGN KEY (cifid)
+      REFERENCES public.mst_cifcom (cifid) MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE CASCADE
+
+6.CREATE TABLE public.mst_cifpersnl
+(
+  cifid character varying(10) NOT NULL,
+  aoid character varying(10) NOT NULL,
+  fullnm character varying(80) NOT NULL,
+  predegree character varying(16),
+  postdegree character varying(16),
+  surenm character varying(50) NOT NULL,
+  mothrnm character varying(50) NOT NULL,
+  religionid character(1) NOT NULL,
+  marriageid character(1) NOT NULL,
+  lasteduid character varying(4) NOT NULL,
+  npwp character varying(20),
+  brtdt date NOT NULL,
+  brtplace character varying(32) NOT NULL,
+  typeid character(2) NOT NULL,
+  idnbr character varying(32) NOT NULL,
+  addr character varying(64) NOT NULL,
+  rt character varying(3),
+  rw character varying(3),
+  kelnm character varying(32),
+  postalcode character varying(5) NOT NULL,
+  kecnm character varying(32),
+  cityid character varying(4) NOT NULL,
+  provid character varying(2) NOT NULL,
+  countryid character varying(2) NOT NULL,
+  notelp character varying(16),
+  nofax character varying(16),
+  expdt date NOT NULL,
+  stsnation smallint NOT NULL,
+  sex smallint NOT NULL,
+  nohp character varying(16),
+  bloodtype character varying(2),
+  hobby character varying(20),
+  insured smallint NOT NULL,
+  homeid character(1) NOT NULL,
+  ownid character varying(4) NOT NULL,
+  alias character varying(80),
+  flgcitizen smallint NOT NULL,
+  note character varying(150),
+  nip character varying(20),
+  jobid character varying(3),
+  CONSTRAINT mst_cifpersnl_pkey PRIMARY KEY (cifid),
+  CONSTRAINT fk_mst_cifpersnl FOREIGN KEY (cifid)
+      REFERENCES public.mst_cifcom (cifid) MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE CASCADE
+	  
+7.CREATE TABLE public.mst_cifcom
+(
+  cifid character varying NOT NULL,
+  aoid character varying(10),
+  compnm character varying(20),
+  dtbuild date,
+  CONSTRAINT mst_cifcom_pkey PRIMARY KEY (cifid)
+
+8.alter table mst_cifpersnl
+add constraint fk_mst_cifpersnl foreign key (cifid)
+references mst_cifcom (cifid) on update cascade on delete cascade
+
+9.8.alter table mst_cif
+add constraint fk_mst_cif foreign key (cifid)
+references mst_cifcom (cifid) on update cascade on delete cascade
+
